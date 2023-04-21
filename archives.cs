@@ -3,6 +3,26 @@ using System.Data.SqlClient;
 class Archives {
     public Archives() {}
 
+    public void create(string titre, string description, int liste_id) {
+        SqlConnection connection =  Database.db_connection();
+        string query = "INSERT INTO listes(titre, description, liste_id) VALUES(@Titre, @Description, @ListeId)";
+
+        try {
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Titre", titre);
+            command.Parameters.AddWithValue("@Description", description);
+            command.Parameters.AddWithValue("@ListeId", liste_id);
+            command.ExecuteNonQuery();
+        }
+        catch(Exception e) {
+            Console.WriteLine("Erreur, connexion à la base de données !\n" + e.Message);
+        }
+        finally {
+            connection.Close();
+        }
+    }
+
     public List<Dictionary<string, object>> findall() {
         SqlConnection connection =  Database.db_connection();
         string query = "SELECT a.id as id, a.titre as titre, a.description as description," +
