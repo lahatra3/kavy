@@ -5,7 +5,8 @@ class Archives {
 
     public List<Dictionary<string, object>> findall() {
         SqlConnection connection =  Database.db_connection();
-        string query = "SELECT * FROM archives";
+        string query = "SELECT a.id as id, a.titre as titre, a.description as description, a.liste_id as liste_id, l.nom as nom_liste" +
+            "FROM archives a JOIN listes l ON a.liste_id = l.id";
         List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
 
         try {
@@ -33,7 +34,9 @@ class Archives {
 
     public Dictionary<string, object> findone(int archive_id) {
         SqlConnection connection =  Database.db_connection();
-        string query = "SELECT * FROM archives WHERE id = @ArchiveId";
+        string query = "SELECT a.id as id, a.titre as titre, a.description as description, a.liste_id as liste_id, l.nom as nom_liste" +
+            "FROM archives a JOIN listes l ON a.liste_id = l.id" +
+            "WHERE id = @ArchiveId";
         Dictionary<string, object> resultat = new Dictionary<string, object>();
 
         try {
@@ -59,7 +62,9 @@ class Archives {
 
     public List<Dictionary<string, object>> findByListeId(int liste_id) {
         SqlConnection connection =  Database.db_connection();
-        string query = "SELECT * FROM archives WHERE liste_id = @ListeId";
+        string query = "SELECT a.id as id, a.titre as titre, a.description as description, a.liste_id as liste_id, l.nom as nom_liste" +
+            "FROM archives a JOIN listes l ON a.liste_id = l.id" +
+            "WHERE id = @ListeId";
         List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
 
         try {
@@ -87,7 +92,9 @@ class Archives {
 
     public List<Dictionary<string, object>> filtreArchive(string search) {
         SqlConnection connection =  Database.db_connection();
-        string query = "SELECT * FROM archives WHERE titre LIKE %@Search% OR description LIKE %@Search%";
+        string query = "SELECT a.id as id, a.titre as titre, a.description as description, a.liste_id as liste_id, l.nom as nom_liste" +
+            "FROM archives a JOIN listes l ON a.liste_id = l.id" +
+            "WHERE titre LIKE %@Search% OR description LIKE %@Search%";
         List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
 
         try {
