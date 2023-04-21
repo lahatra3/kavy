@@ -87,13 +87,45 @@ class Archives {
         string query = "SELECT a.id as id, a.titre as titre, a.description as description," +
             "a.liste_id as liste_id, l.nom as nom_liste, a.created_at as created_at, a.updated_at as updated_at" +
             "FROM archives a JOIN listes l ON a.liste_id = l.id" +
-            "WHERE id = @ListeId";
+            "WHERE liste_id = @ListeId";
         List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
 
         try {
             connection.Open();
             SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddWithValue("@ListeId", liste_id);
+            SqlDataReader reader = command.ExecuteReader();
+            while(reader.Read()) {
+                Dictionary<string, object> row = new Dictionary<string, object>();
+                for(int i = 0; i < reader.FieldCount; i++) {
+                    row.Add(reader.GetName(i), reader.GetValue(i));
+                }
+                results.Add(row);
+            }
+            reader.Close();
+        }
+        catch(Exception e) {
+            Console.WriteLine("Erreur, connexion à la base de données !\n" + e.Message);
+        }
+        finally {
+            connection.Close();
+        }
+        return results;
+    }
+
+    public List<Dictionary<string, object>> findByClient(int client_id) {
+        SqlConnection connection =  Database.db_connection();
+        string query = "SELECT a.id as id, a.titre as titre, a.description as description," +
+            "a.liste_id as liste_id, l.nom as nom_liste, a.created_at as created_at, a.updated_at as updated_at" +
+            "FROM archives a" + 
+            "JOIN listes l ON a.liste_id = l.id" +
+            "WHERE liste_id IN (SELECT DISTINCT(liste_id) FROM abonnements WHERE client_id = @ClientId)";
+        List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+
+        try {
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@ClientId", client_id);
             SqlDataReader reader = command.ExecuteReader();
             while(reader.Read()) {
                 Dictionary<string, object> row = new Dictionary<string, object>();
