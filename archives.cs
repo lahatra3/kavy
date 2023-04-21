@@ -85,6 +85,34 @@ class Archives {
         return results;
     }
 
+    public List<Dictionary<string, object>> filtreArchive(string search) {
+        SqlConnection connection =  Database.db_connection();
+        string query = "SELECT * FROM archives WHERE titre LIKE %@Search% OR description LIKE %@Search%";
+        List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+
+        try {
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Search", search);
+            SqlDataReader reader = command.ExecuteReader();
+            while(reader.Read()) {
+                Dictionary<string, object> row = new Dictionary<string, object>();
+                for(int i = 0; i < reader.FieldCount; i++) {
+                    row.Add(reader.GetName(i), reader.GetValue(i));
+                }
+                results.Add(row);
+            }
+            reader.Close();
+        }
+        catch(Exception e) {
+            Console.WriteLine("Erreur, connexion à la base de données !\n" + e.Message);
+        }
+        finally {
+            connection.Close();
+        }
+        return results;
+    }
+
     public void update(string titre, string description, int archive_id) {
         SqlConnection connection =  Database.db_connection();
         string query = "UPDATE archives SET titre = @Titre, description = @Description WHERE id = @ArchiveId";
