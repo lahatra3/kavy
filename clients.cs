@@ -7,6 +7,7 @@ class Clients {
         SqlConnection connection =  Database.db_connection();
         string query = "SELECT * FROM clients";
         List<Dictionary<string, object>> results = new List<Dictionary<string, object>>();
+        
         try {
             connection.Open();
             SqlCommand command = new SqlCommand(query, connection);

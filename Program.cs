@@ -3,6 +3,6 @@ using System.Data.SqlClient;
 
 class Program {
     public static void Main() {
-        
+        Clients client = new Clients();
     }
 }

@@ -5,7 +5,7 @@ class Abonnements {
 
     public void create(int client_id, int liste_id) {
         SqlConnection connection =  Database.db_connection();
-        string query = "INSERT INTO listes(client_id, liste_id) VALUES(@ClientId, @ListeId)";
+        string query = "INSERT INTO abonnements(client_id, liste_id) VALUES(@ClientId, @ListeId)";
 
         try {
             connection.Open();

@@ -5,7 +5,7 @@ class Archives {
 
     public void create(string titre, string description, int liste_id) {
         SqlConnection connection =  Database.db_connection();
-        string query = "INSERT INTO listes(titre, description, liste_id) VALUES(@Titre, @Description, @ListeId)";
+        string query = "INSERT INTO archives(titre, description, liste_id) VALUES(@Titre, @Description, @ListeId)";
 
         try {
             connection.Open();
