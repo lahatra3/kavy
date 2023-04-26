@@ -3,6 +3,23 @@ using System.Data.SqlClient;
 class Clients {
     public Clients() {}
 
+    public void create(string nom) {
+        SqlConnection connection =  Database.db_connection();
+        string query = "INSERT INTO clients(nom) VALUES(@Nom)";
+
+        try {
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Nom", nom);
+            command.ExecuteNonQuery();
+        }
+        catch(Exception e) {
+            Console.WriteLine("Erreur, connexion à la base de données !\n" + e.Message);
+        }
+        finally {
+            connection.Close();
+        }
+    }
     public List<Dictionary<string, object>> findall() {
         SqlConnection connection =  Database.db_connection();
         string query = "SELECT * FROM clients";
@@ -42,7 +59,9 @@ class Clients {
             command.Parameters.AddWithValue("@ClientId", client_id);
             SqlDataReader reader = command.ExecuteReader();
             while(reader.Read()) {
-                resultat.Add(reader.GetName(reader.FieldCount - 1), reader.GetValue(reader.FieldCount - 1));
+                for(int i = 0; i < reader.FieldCount; i++) {
+                    resultat.Add(reader.GetName(i), reader.GetValue(i));
+                }
             }
 
             reader.Close();

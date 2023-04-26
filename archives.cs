@@ -67,7 +67,9 @@ class Archives {
             command.Parameters.AddWithValue("@ArchiveId", archive_id);
             SqlDataReader reader = command.ExecuteReader();
             while(reader.Read()) {
-                resultat.Add(reader.GetName(reader.FieldCount - 1), reader.GetValue(reader.FieldCount - 1));
+                for(int i = 0; i < reader.FieldCount; i++) {
+                    resultat.Add(reader.GetName(i), reader.GetValue(i));
+                }
             }
 
             reader.Close();
